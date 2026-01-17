@@ -1,0 +1,29 @@
+name: Auto Deploy to PROD
+
+on:
+  push:
+    branches:
+      - prod   # triggers ONLY when prod branch is updated
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+      - name: Configure Databricks PROD
+        run: |
+          databricks configure --token <<EOF
+          ${{ secrets.DATABRICKS_HOST_PROD }}
+          ${{ secrets.DATABRICKS_TOKEN_PROD }}
+          EOF
+
+      - name: Deploy to Databricks PROD
+        run: |
+          databricks bundle deploy --target prod
