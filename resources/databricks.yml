@@ -1,0 +1,14 @@
+bundle:
+  name: databricks-pipeline
+resources:
+  jobs:
+    retail_pipeline:
+      name: retail-pipeline
+      tasks:
+        - task_key: transform
+          spark_python_task:
+            python_file: ../src/pipeline.py
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_D4ds_v5
+            num_workers: 1
